@@ -26,6 +26,10 @@
         <?php
             $sett_arr = getSettingsArr($db,$value['group']);
             foreach($sett_arr as $sett){
+                if($sett['group']=='Modules'){
+                    $setTemp = explode("|",$sett['details']);
+                    $sett['details'] = $setTemp[0];
+                }
                 if($sett['type'] == 'checkbox'){
                     if($sett['value']){
                         $check = 'checked="checked"';   

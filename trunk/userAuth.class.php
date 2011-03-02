@@ -82,10 +82,21 @@ class userAuth {
                 }
                 // File Upload
                 if(isset($_FILES)){
-                    $temp_file = $_FILES['photo']['tmp_name'];
-                    $up_file  = IMG_DIR.$post_var_ins['randid'].strtolower(strrchr($_FILES['photo']['name'],'.'));
-                    if(move_uploaded_file($temp_file,$up_file)){
-                        $post_var_ins['photo'] = $post_var_ins['randid'].strtolower(strrchr($_FILES['photo']['name'],'.'));    
+                    // Create File Upload Class
+                    $Fupload = new upload($_FILES['photo']);
+                    if($Fupload->uploaded){
+                        $Fupload->file_new_name_body = $post_var_ins['randid'];
+                        $Fupload->image_resize = true;
+                        $Fupload->image_x = 100;
+                        $Fupload->image_ratio_y = true;
+                        $Fupload->file_overwrite = true;
+                        $Fupload->allowed = array('image/*');
+                        $Fupload->process(IMG_DIR);
+                        if($Fupload->processed){
+                            $post_var_ins['photo'] = $Fupload->file_dst_name;
+                        }else{
+                            $post_var_ins['photo'] = $post_var['gender'].".png";
+                        }
                     }else{
                         $post_var_ins['photo'] = $post_var['gender'].".png";
                     }
@@ -145,11 +156,27 @@ class userAuth {
                 $data[$value] = $post_vars[$value];
             }
             if(!empty($file)){                
-                $temp_file = $file['photo']['tmp_name'];
-                $up_file  = IMG_DIR.$ua_sess['randid'].strtolower(strrchr($file['photo']['name'],'.'));
-                if(move_uploaded_file($temp_file,$up_file)){
-                    $data['photo'] = $ua_sess['randid'].strtolower(strrchr($file['photo']['name'],'.'));    
-                }
+                $Fupload = new upload($file['photo']);
+                    if($Fupload->uploaded){
+                        $Fupload->file_new_name_body = $post_var_ins['randid'];
+                        $Fupload->image_resize = true;
+                        $Fupload->image_x = 100;
+                        $Fupload->image_ratio_y = true;
+                        $Fupload->file_overwrite = true;
+                        $Fupload->allowed = array('image/*');
+                        $Fupload->process(IMG_DIR);
+                        if($Fupload->processed){
+                            $data['photo'] = $Fupload->file_dst_name;
+                        }else{
+                            if($ua_sess['photo']=='m.png' || $ua_sess['photo']=='f.png'){
+                                $data['photo'] = $post_vars['gender'].".png";
+                            }
+                        }
+                    }else{
+                        if($ua_sess['photo']=='m.png' || $ua_sess['photo']=='f.png'){
+                            $data['photo'] = $post_vars['gender'].".png";
+                        }
+                    }
                 
             }else{
 

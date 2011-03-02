@@ -29,7 +29,7 @@ include_once('Database.class.php');
 include_once('config.inc.php');
 include_once('Proquiz.class.php');
 include_once('mail/class.phpmailer.php');
-
+include_once('upload.class.php');
 
 
 // include modules
@@ -838,7 +838,7 @@ function getLineUrl(){
     $timimg_offset_per[0] = 0;
     $param_time ="0,";
     $i=0;
-    $max_t = max($timimg_offset);
+    $max_t = max($timimg_arr);
     if($max_t<=0){
         $max_t =1;
     }
