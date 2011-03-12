@@ -1,7 +1,7 @@
 <?php
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -10,7 +10,7 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
@@ -159,6 +159,16 @@ class Proquiz {
 
     // Process Quiz Results
     function processQuiz($db,$quiz,$post){
+        
+        // Anti Hack
+        if(getSettings($db,'enblathack')){
+            if(!$this->antiHack($db,$quiz)){
+                $_SESSION['hackattempt'] = "yes"; 
+                header("Location:hackattempt.php");   
+            }
+            
+        }
+        
         $total_correct = 0;
         $total_wrong = 0;
         $total_blank = 0;
@@ -187,7 +197,11 @@ class Proquiz {
             }
             
             
+        
+            
         }
+        
+        
         
         $diff = $quiz['PARAMS']['quiz_end_ts'] - $quiz['PARAMS']['quiz_start_ts'];
         if($diff > $quiz['PARAMS']['total_time']*60){
@@ -210,6 +224,44 @@ class Proquiz {
         $pq_arr['total_question'] = $quiz['PARAMS']['total_qstn'];
         $pq_arr['instid'] = $quiz['PARAMS']['instid'];
         return $pq_arr;
+    }
+    
+    // Detect Hack
+    function antiHack($db,$quiz){
+        $threshold = getSettings($db,'ahthold');
+        $detT = ($quiz['PARAMS']['total_time']*60 + $threshold) - ($quiz['PARAMS']['quiz_end_ts'] - $quiz['PARAMS']['quiz_start_ts']);
+        if($detT < 0){
+            
+            // Delete Record
+            if(getSettings($db,'delrecord')){
+               $this->delRecord($db,$quiz['PARAMS']['instid']);
+            }
+            
+            // Deactivate User
+            if(getSettings($db,'deactuser') && ($_SESSION['UA_DETAILS']['level']!='admin')){
+                $this->deactUser($db,$quiz['PARAMS']['user']);
+            }
+            
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    // Delete Quiz Record
+    function delRecord($db,$instid){
+        $sql = "DELETE FROM ".QUIZDB." WHERE `instid` = '".$instid."'";
+        if($db->query($sql)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    // Deactivate User
+    function deactUser($db,$randid){
+        $sql = "UPDATE ".UA_TABLE." SET  `active` = (`active`+1)%2  WHERE `randid` = '".$randid."'";
+        $db->query($sql);
     }
     
     // get rank
@@ -327,6 +379,17 @@ class Proquiz {
     
     function checkSpceChar($var_data){
         return str_replace("|","_",$var_data);
+    }
+    
+    // Delete User Records
+    function delUserRecords($db,$randid){
+        $sql = "DELETE FROM ".QUIZDB." WHERE `user` = '".$randid."'";
+        
+        if($db->query($sql)){
+            return true;
+        }else{
+            return false;
+        }
     }
     
 }

@@ -1,7 +1,7 @@
 <?php
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -10,7 +10,7 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
@@ -62,7 +62,7 @@ jQuery(document).ready(function() {
 	<![endif]-->
 
 	<script src="js/jquery.lwtCountdown-1.0.js" type="text/javascript"></script>
-    <?php if(!empty($_SESSION['PQ_QUIZ']) || !empty($_SESSION['RESULTS'])){ ?>
+    <?php if(!empty($_SESSION['PQ_QUIZ'])){ ?>
     <script src="js/quiz.js" type="text/javascript"></script>
     <?php } ?>
 <?php include_once('common_header.php'); ?>
@@ -105,6 +105,7 @@ jQuery(document).ready(function() {
         <?php
             if(empty($_SESSION['PQ_QUIZ']) && !empty($_SESSION['RESULTS'])){
                 include_once('modules/summary.php');
+                unset($_SESSION['RESULTS'],$_SESSION['PQ_QUIZ']);
             }else{
         ?>
         <!-- End Summary -->
@@ -112,9 +113,7 @@ jQuery(document).ready(function() {
 	    
         <div class="cntHolder">
         
-        <?php  if(!empty($_SESSION['PQ_QUIZ'])){ ?>
-            <div class="start_quiz_hld"></div>
-        <?php } ?>
+        
             <div class="pagination">
                 <?php 
                     if(!empty($_SESSION['PQ_QUIZ'])){
@@ -124,6 +123,7 @@ jQuery(document).ready(function() {
             </div>
         <!-- Setup Start  -->
             <?php 
+            //print_r($_SESSION['PQ_QUIZ']);
             if(empty($_SESSION['PQ_QUIZ']) && empty($_SESSION['RESULTS'])){
                 include('modules/setup.php');                 
             } ?>

@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<softon>
+	<software name='proquiz'>
+		<name>ProQuiz</name>
+		<version>V2</version>
+		<dversion>2.0.2</dversion>
+		<describtion>ProQuiz V2 is a Professional Quiz Maker Software capable of Generating Quizzes of all types by simple user interface. Its easy User-friendly interface makes it stand apart from other softwares in this category.</describtion>
+		<productof>Softon Technologies</productof>
+		<developer email='manzovi@gmail.com'>Manzovi</developer>
+		<license>GPL | Open Source</license>
+		<support>proquiz@softon.org</support>
+		<website>http://proquiz.softon.org</website>
+		<release>12 March 2011</release>
+		<issues>http://code.google.com/p/proquiz/issues/list</issues>
+		<download>
+			<complete>http://proquiz.googlecode.com/files/proquiz_v2.0.2.zip</complete>
+			<upgrade>http://proquiz.googlecode.com/files/proquiz_update_v2.0.2.zip</upgrade>
+		</download>
+		<features>
+			<feature>Anti-Hack Feature Added</feature>
+			<feature>Admin Customization of Anti-Hack Features Added</feature>
+			<feature>Onevent of Hack Users Record May be Deleted</feature>
+			<feature>Onevent of Hack Users Account may be Deactivated</feature>
+			<feature>User Delete Feature added to Admin Panel</feature>
+			<feature>Automatic Update Notification Added to Admin Panel</feature>
+		</features>
+		<bugfixes from='2.0.1'>
+			<bugs class="5">Anti-Hack Feature Added.</bugs>
+			<bugs class="5" >Bug Fix in Setup Quiz Page.</bugs>
+			<bugs class="1" >Bugs in Settings Panel Layout</bugs>
+		</bugfixes>
+	</software>
+</softon>

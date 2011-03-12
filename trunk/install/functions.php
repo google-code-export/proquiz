@@ -1,7 +1,7 @@
 <?php
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -10,7 +10,7 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
@@ -207,7 +207,7 @@ function PQmail($mail,$post_vars){
         $data['SITETITLE'] = $post_vars['site_name'];
         $data['USERNAME'] = $post_vars['admin_user'];
         $data['PASSWORD'] = $post_vars['admin_pass'];
-        $data['SITELINK'] = $post_vars['site_link'];
+        $data['SITELINK'] = $_SERVER['HTTP_HOST'];
         $tags_other = array('SITETITLE'=>'SITETITLE',
                             'USERNAME'=>'USERNAME',
                             'PASSWORD'=>'PASSWORD',

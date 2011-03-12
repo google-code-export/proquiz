@@ -1,7 +1,7 @@
 <?php
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -10,13 +10,14 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
 ?><ul id="nav" class="dropdown dropdown-horizontal">
             	<li><a href="<?php echo $_SERVER['PHP_SELF']; ?>">MainMenu</a></li>
-            	<li><span class="dir">Quiz</span>
+            	<?php if(getSettings($db,'umngqstn') || ($_SESSION['UA_DETAILS']['level']=='admin')) { ?>
+                <li><span class="dir">Quiz</span>
             		<ul>
             			<li><span class="dir">New</span>
                             <ul>
@@ -41,6 +42,7 @@
             			</li>
             		</ul>
             	</li>
+                <?php } ?>
             	<li><span class="dir">Results</span>
             		<ul>
             			<li><a href="<?php echo $_SERVER['PHP_SELF'].'?action=getpage&page=results&type='.$_SESSION['UA_DETAILS']['randid']; ?>">My Results</a></li>

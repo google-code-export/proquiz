@@ -107,7 +107,14 @@ INSERT INTO `{TBLPRE}settings` (`id`, `name`, `value`, `details`, `type`, `group
 (7, 'brdmail', '1', 'Board Mails', 'checkbox', 'Mail', 'installed'),
 (8, 'smtpmail', '', 'SMTP Mails', 'checkbox', 'Mail', 'installed'),
 (9, 'gmailuser', 'md@trdc.in', 'Gmail Username', 'text', 'Mail', 'installed'),
-(10, 'gmailpass', 'v0HMfGVFyE', 'Gmail Username', 'text', 'Mail', 'installed');
+(10, 'gmailpass', 'v0HMfGVFyE', 'Gmail Username', 'text', 'Mail', 'installed'),
+(11, 'adquiz', NULL, 'Adaptive Quiz|This is a real time Quiz module where the user get the questions as he progress depending on his capability and correct answers of the previous questions. At each step the difficulty of the questions are increased.', 'checkbox', 'Modules', 'notinstalled'),
+(12, 'custquiz', NULL, 'Combined Quiz| A combination of all the previous modules as per decided by the Test Conductor.', 'checkbox', 'Modules', 'notinstalled'),
+(13, 'umngqstn', '', 'Allow Users to Add/Edit Questions.(Admin Activation Required.)', 'checkbox', 'Settings', 'installed'),
+(14, 'enblathack', '1', 'Enable Anti Hack Feature', 'checkbox', 'Anti Hack', 'installed'),
+(16, 'delrecord', '1', 'Delete the Record When Hack Detected', 'checkbox', 'Anti Hack', 'installed'),
+(15, 'ahthold', '30', 'Anti Hack Threshold Value(Secs) :\r\n\r\neg: 30\r\n\r\nminimum 10 to 15 secs ', 'text', 'Anti Hack', 'installed'),
+(17, 'deactuser', '1', 'Deactivate User Who tried to Hack the System.', 'checkbox', 'Anti Hack', 'installed');
 {SEPR}
 DROP TABLE IF EXISTS `{TBLPRE}userauth`;
 {SEPR}

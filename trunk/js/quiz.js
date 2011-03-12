@@ -1,6 +1,6 @@
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -9,7 +9,7 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
@@ -21,7 +21,7 @@ jQuery(document).ready(function() {
                    $(this).toggleClass('pq_btnd');
                 });
              
-             $('#side_ua_cnt').slideToggle();
+             //$('#side_ua_cnt').slideToggle();
                 
              // HSelect Answer   
                 $('.pq_opt').click(function(){
@@ -44,16 +44,17 @@ jQuery(document).ready(function() {
                 pq_setup();
                 
                 // Start Quiz Event Trriger
-                $('#pq_start').click(function(){
+                function start_quiz(){
                     var speed = 800;
                     var img_url = $('.sideImg img').attr('src');
                     $('.sideImg img').attr('src','images/smileys/goodluck.gif');
-                    $(this).addClass('pq_btnd');
-                    $(this).html('Loading...');
-                    $('#pq_progress').show();
                     var jsondata;
                     $.post('functions.php',{action: "getquizdata"},function(data){
+                        
                         jsondata = $.parseJSON(data);
+                        if(jsondata == null){
+                            return true;
+                        }
                         time_var = $('#countdown_dashboard').countDown({
         					targetOffset: {
         						'day': 		00,
@@ -66,11 +67,11 @@ jQuery(document).ready(function() {
         				});
                         time_var.stopCountDown();
                     });
-                    $('#side_ua_cnt').slideToggle(speed,function(){
+                   
                         $('#countdown_dashboard').fadeIn(speed,function(){
                             $('#qstn1').fadeIn(speed,function(){
                                 $('.pq_ft').fadeIn(speed,function(){
-                                    $(".start_quiz_hld").fadeOut(speed,function(){
+                                   
                                         $('.pagination').fadeIn(speed,function(){
                                             $('.paginationc ul').append('<li><a class="pagin_btn" href="#">1</a></li>');
                                             if(Number(jsondata.total_qstn)>10){
@@ -88,14 +89,14 @@ jQuery(document).ready(function() {
                                             time_var.startCountDown();
                                             $('.sideImg img').attr('src',img_url);
                                         });
-                                    });
+                                    
                                 });
                             });
                         });
-                    });
+                    
 
     
-                });
+                }
                 
                 // Next Question display
                 $('#pq_next,#pagin_next').click(function(){
@@ -220,7 +221,7 @@ jQuery(document).ready(function() {
                 // Submit Form When timer Expires
                 $.fn.timerExpire = function(){
                     var speed = 1000;
-                    $('#side_ua_cnt').slideToggle(speed,function(){
+                    
                         $('#countdown_dashboard').fadeOut(speed,function(){
                             $('.pq_container').fadeOut(speed,function(){
                                 $('.pq_ft').fadeOut(speed,function(){
@@ -232,7 +233,7 @@ jQuery(document).ready(function() {
                                 });
                             });
                         });
-                    });
+                    
                     
                     
                 }
@@ -241,8 +242,6 @@ jQuery(document).ready(function() {
                     $('#countdown_dashboard').hide();
                     $('.pagination').hide();
                     $('.pq_ft').hide();
-                    var start_str = '<span style="font-size:1.1em;" ><b>Your Quiz is ready,To start the Quiz Please click the "Start Quiz" Button Below.</b><br /><p><span style="font-weight:bold;color:red;font-size:0.9em;">Note:</span> <span style="font-size:1.1em;" >Please Do Not Refresh the Page from this point onwards otherwise all your progress will be lost.</span></span></p><div style="position: relative;"><div id="pq_start"  class="pq_btn">Start Quiz</div><br /></div><div id="pq_progress"><img src="images/progress.gif" /></div>';
-                    $('.start_quiz_hld').html(start_str);
                     $('#pq_progress').hide();
                     $('.pq_container').hide();
                     
@@ -251,5 +250,5 @@ jQuery(document).ready(function() {
                 
 
                         
-
+                start_quiz();
 			});

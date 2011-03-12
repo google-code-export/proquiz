@@ -1,6 +1,6 @@
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -9,7 +9,7 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
@@ -30,7 +30,7 @@ function updateUserOnline(){
             str += '<li><img src="images/online.png" />GUESTS ('+count+')</li>';   
         }
         $('#onlineUsersList').html(str);
-        setTimeout('updateUserOnline()',6000);
+        setTimeout('updateUserOnline()',12000);
     },"json");
     
 }
@@ -53,6 +53,8 @@ jQuery(document).ready(function() {
 		direction: 'up',
 		height: 150
 	};
+    
+    
     $('#rankScroller').vTicker(options);
     
     // Profile Details Show/Hide Button
