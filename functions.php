@@ -1,7 +1,7 @@
 <?php
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -10,7 +10,7 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
@@ -134,6 +134,7 @@ if(isset($_POST['action']) || isset($_GET['action'])){
         if(!empty($_SESSION['PQ_QUIZ']['PARAMS']['quiz_start_ts'])){
             $_SESSION['PQ_QUIZ']['PARAMS']['total_time'] = round((time() - $_SESSION['PQ_QUIZ']['PARAMS']['quiz_start_ts'])/60);
         }
+        
         echo json_encode($_SESSION['PQ_QUIZ']['PARAMS']);
         $_SESSION['PQ_QUIZ']['PARAMS']['quiz_start_ts'] = $pq->start_quiz_ts($db,$_SESSION['PQ_QUIZ']['INSTID']);
     }
@@ -448,29 +449,38 @@ if(isset($_POST['action']) || isset($_GET['action'])){
             }
             
         }else{
-            if($pq->pqAddQuestion($db,$_POST,$_SESSION['UA_DETAILS'],$_GET['type'])){
-                if(empty($_GET['submitType'])){
-                    $_SESSION['ERROR']['type'] = 'Done';
-                    $_SESSION['ERROR']['reason'] = "A New Question Added to the Database";
+           if(getSettings($db,'umngqstn') || ($_SESSION['UA_DETAILS']['level']=='admin')) { 
+                if($pq->pqAddQuestion($db,$_POST,$_SESSION['UA_DETAILS'],$_GET['type'])){
+                    if(empty($_GET['submitType'])){
+                        $_SESSION['ERROR']['type'] = 'Done';
+                        $_SESSION['ERROR']['reason'] = "A New Question Added to the Database";
+                    }else{
+                        $errorAjax['type'] = 'Done';
+                        $errorAjax['reason'] = "A New Question Added to the Database";
+                        echo json_encode($errorAjax);
+                    }    
                 }else{
-                    $errorAjax['type'] = 'Done';
-                    $errorAjax['reason'] = "A New Question Added to the Database";
-                    echo json_encode($errorAjax);
-                }    
-            }else{
+                    if(empty($_GET['submitType'])){
+                        $_SESSION['ERROR']['type'] = 'Error';
+                        $_SESSION['ERROR']['reason'] = "Some Error Occured . Please Try Again.";
+                    }else{
+                        $errorAjax['type'] = 'Error';
+                        $errorAjax['reason'] = "Some Error Occured . Please Try Again.";
+                        echo json_encode($errorAjax);
+                    }
+                }
+           }else{
                 if(empty($_GET['submitType'])){
                     $_SESSION['ERROR']['type'] = 'Error';
-                    $_SESSION['ERROR']['reason'] = "Some Error Occured . Please Try Again.";
+                    $_SESSION['ERROR']['reason'] = "Admin has Blocked this action.Please contact the admin";
                 }else{
                     $errorAjax['type'] = 'Error';
-                    $errorAjax['reason'] = "Some Error Occured . Please Try Again.";
+                    $errorAjax['reason'] = "Admin has Blocked this action.Please contact the admin";
                     echo json_encode($errorAjax);
                 }
-            }
-            
+           }
         }
     }
-    
     
     // Edit Question
     if($_GET['subaction']=='editqstn' && !empty($_GET['qid'])){
@@ -582,6 +592,18 @@ if(isset($_POST['action']) || isset($_GET['action'])){
         if($db->query($sql)){
             $_SESSION['ERROR']['type'] = 'Done';
             $_SESSION['ERROR']['reason'] = "Operation Completed.";
+        }else{
+            $_SESSION['ERROR']['type'] = 'Error';
+            $_SESSION['ERROR']['reason'] = "Cannot Perforn The Operation.Please Try Again";
+        }
+    } 
+    
+    // Delete User
+    if($_GET['subaction'] == 'deluser' && !empty($_GET['randid']) && $_SESSION['UA_DETAILS']['level']=='admin'){
+        
+        if($pq->delUserRecords($db,$_GET['randid']) && $auth->deleteUser($db,$_GET['randid'])){
+            $_SESSION['ERROR']['type'] = 'Done';
+            $_SESSION['ERROR']['reason'] = "User : ".$_GET['randid']." Deleted. All Records Cleared";
         }else{
             $_SESSION['ERROR']['type'] = 'Error';
             $_SESSION['ERROR']['reason'] = "Cannot Perforn The Operation.Please Try Again";
@@ -1028,7 +1050,8 @@ function getSubCatList($db,$cat,$randid,$level){
 
 // Update User Online
 function updateUserOnline($db,$key){
-    
+    $sql = "TRUNCATE TABLE  `".ONLINE."`";
+    $db->query($sql);
     if($key == 'de3f82ddc5a0e334830562fcef5e260e' || $key = '5dc65a8f7521c24567dd91f7b04437f9'){
         
         $sessid = session_id();
@@ -1332,4 +1355,99 @@ function getSettParam($db,$name){
 function print_copyright(){
     echo '<div id="s'.PKEY.'">Powered by - <a href="http://www.softon.org">Softon Technologies</a></div>';
 }
+
+// Get Software Info
+function getSoftInfo(){
+    if(file_exists('info.xml')){
+        $xml_client = simplexml_load_file('info.xml');
+        
+        $xml_server = simplexml_load_string($_COOKIE['serverData']);
+    
+        $str = "";
+        if(empty($xml_server)){
+            $str .= '<div class="sideData">
+                    <div class="sideDataType">Current Installation is Upto Date.</div>
+                    </div>';
+            return $str;
+        }
+        
+        $cver = (string)$xml_client->software->dversion;
+        $sver = (string)$xml_server->software->dversion;
+        
+        if($cver != $sver){
+            // Installed Version
+            $str .= '<div class="sideData">
+                    <div class="sideDataType">Installed Version : <span class="sideDataValue">'.$cver.'</span></div>
+                    </div>';
+            
+            // Installed Version
+            $str .= '<div class="sideData">
+                    <div class="sideDataType">Current Version : <span class="sideDataValue">'.$sver.'</span></div>
+                    </div>';
+             
+            // Features
+            $str .= '<div class="sideData">
+                    <div class="sideDataType" >Features : <div style="padding:10%;color:blue;" class="dispScrolled"><ul  >';
+                
+            foreach($xml_server->software->features->feature as $value){
+                $str .= "<li>".$value."</li>";
+            }   
+                        
+            $str .= '</ul></div><div style="clear:both;"></div></div>
+                    </div>';  
+             
+            // Bugs
+            $str .= '<div class="sideData">
+                    <div class="sideDataType" >Bug Fixes : <div style="padding:10%;color:blue;" class="dispScrolled"><ul  >';
+                
+            foreach($xml_server->software->bugfixes->bugs as $value){
+                $str .= "<li>".$value."</li>";
+            }   
+                        
+            $str .= '</ul></div><div style="clear:both;"></div></div>
+                    </div>';   
+                          
+            // Download
+            $str .= '<div class="sideData">
+                    <div class="sideDataType" >Download Full Package : <div style="float:right;width:80%;">
+                        <a href="'.$xml_server->software->download->complete.'" ><img src="images/downloadh.png" width="100%" height="40px" /></a>
+                    </div><div style="clear:both;"></div></div>
+                    </div>';  
+            $str .= '<div class="sideData">
+                    <div class="sideDataType" >Download Upgrade  : <div style="float:right;width:80%;">
+                        <a href="'.$xml_server->software->download->upgrade.'" ><img src="images/download.png" width="100%" height="40px" /></a>
+                    </div><div style="clear:both;"></div></div>
+                    </div>';  
+               
+            
+            
+        }else{
+            $str = '<div class="sideData">
+                    <div class="sideDataType">Current Installation is Upto Date.</div>
+                    </div>';
+            
+            
+        }
+        return $str;
+    }else{
+        return '<div class="sideError">info.xml file not found in the root folder.Please restore.</div>';
+    }
+}
+
+// Get News
+function getNews(){
+    $xml_server = simplexml_load_string($_COOKIE['serverData']);
+    
+    if(!empty($xml_server->othernews->news)){
+        $str = '<div class="class0">';
+        foreach($xml_server->othernews->news as $value){
+            $str .= '<div >'.$value."</div>";
+        }  
+        $str .= "</div>";   
+    }
+    
+    return $str;
+}
+
+
 ?>

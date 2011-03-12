@@ -1,7 +1,7 @@
 <?php
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -10,7 +10,7 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
@@ -29,6 +29,7 @@
             <th>Rating</th>
 			<th>Make Admin</th>            
 			<th>Activate</th>
+            <th>Delete</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -52,6 +53,7 @@
             </td>
             <td class="center"><a href="<?php echo $_SERVER['PHP_SELF']; ?>?action=getpage&page=manage_users&subaction=makeadmin&level=<?php echo $value['level']; ?>&randid=<?php echo $value['randid']; ?>"><img src="images/<?php if($value['level']=='admin') { echo "admin";} else {echo "user";} ?>.png" width="32px" height="32px" /></a></td>
             <td class="center"><a href="<?php echo $_SERVER['PHP_SELF']; ?>?action=getpage&page=manage_users&subaction=actuser&randid=<?php echo $value['randid']; ?>"><img src="images/<?php if($value['active']) { echo "act";} else {echo "actd";} ?>.png" width="32px" height="32px" /></a></td>
+            <td class="center"><a href="<?php echo $_SERVER['PHP_SELF']; ?>?action=getpage&page=manage_users&subaction=deluser&randid=<?php echo $value['randid']; ?>"><img src="images/wrongB.png" width="32px" height="32px" /></a></td>
 		</tr>
 		<?php } ?>
 	</tbody>
@@ -63,7 +65,7 @@
             <th>Rating</th>
 			<th>Make Admin</th>            
 			<th>Activate</th>
-
+            <th>Delete</th>
 		</tr>
 	</tfoot>
 </table>

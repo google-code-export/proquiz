@@ -1,7 +1,7 @@
 <?php
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -10,11 +10,34 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
-?><div id="newquiz" style="margin-top: 50px;">
+?>
+<style type="text/css">
+<!--
+	#settings fieldset{
+	   background:#ebf4fb;
+	}
+    
+    #settings label {
+        display:block;
+        font-weight:bold;
+        text-align:right;
+        width:40%;
+        float:left;
+    }
+    
+    #settings input,#settings select,#settings textarea{
+        float:left;
+        font-size:12px;
+        margin:2px 0 20px 10px;
+    }
+    
+-->
+</style>
+<div id="newquiz" style="margin-top: 50px;">
   <form action="<?php echo $_SERVER['PHP_SELF'].'?action=getpage&page=settings&subaction=editsett'; ?>" enctype="multipart/form-data" method="post" id="settings">
   <?php
         $group_arr = getSettingsGroup($db);
@@ -54,8 +77,8 @@
 		</ul>
 	</fieldset>
   <?php } ?>
-    <fieldset class="submit">
-		<input type="submit" class="sbutton" value="Done..." /> 
+    <fieldset style="background:#fff;" class="submit">
+		<input type="submit" style="border:solid 1px #fff;padding: 0;margin: 0;" class="sbutton" value="Done..." /> 
 	</fieldset>
 </form>
 </div>

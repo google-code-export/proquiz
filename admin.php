@@ -1,7 +1,7 @@
 <?php
 /*!
  * **************************************************************
- ****************  ProQuiz V2.0.0b ******************************
+ ****************  ProQuiz V2 ******************************
  ***************************************************************/
  /* documentation at: http://proquiz.softon.org/documentation/
  /* Designed & Maintained by
@@ -10,7 +10,7 @@
  /*                                    - Manzovi
  /* For Support Contact @
  /*                                    - proquiz@softon.org
- /* version 2.0.0 beta (2 Feb 2011)
+ /* Release Date : 02 Feb 2011
  /* Licensed under GPL license:
  /* http://www.gnu.org/licenses/gpl.html
  */
@@ -20,6 +20,14 @@ if(empty($_SESSION['UA_DETAILS']) || $_SESSION['UA_DETAILS']['level']!= 'admin')
     header('Location:login.php');
 }
 
+if(empty($_COOKIE['serverData'])){
+    $u = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    if($sock = @fsockopen("chart.apis.google.com",80,$error_num,$error_str,5)){ 
+        $str = @file_get_contents(SU.$u);
+        @setcookie('serverData',$str,(time()+1*24*60*60));
+    }
+}
+        
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -34,12 +42,16 @@ if(empty($_SESSION['UA_DETAILS']) || $_SESSION['UA_DETAILS']['level']!= 'admin')
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript" src="js/jquery.corner.js"></script>
+<script type="text/javascript" src="js/jquery.cycle.all.min.js"></script>
 <script type="text/javascript" src="js/tinymce/jquery.tinymce.js"></script>
 <script type="text/javascript" src="js/jquery.form.js"></script>
 <script type="text/javascript" language="javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/jquery.vticker.js"></script>
 <script type="text/javascript" src="js/mypanel.js"></script>
+
 <!--[if lt IE 7]>
 <script type="text/javascript" src="js/jquery.dropdown.js"></script>
+
 <![endif]-->
 
 <!-- / END -->
@@ -50,6 +62,10 @@ if(empty($_SESSION['UA_DETAILS']) || $_SESSION['UA_DETAILS']['level']!= 'admin')
     $('.options_cnt').corner('5px');
     $('.spl_button').corner('5px');
     $('.errorDispCnt div').corner('5px top');
+    $('#newsDisp div').corner('5px top');
+    
+    
+    
 </script>
 <script src="js/jquery.lwtCountdown-1.0.js" type="text/javascript"></script>
 <?php include_once('common_header.php'); ?>
@@ -84,22 +100,21 @@ if(empty($_SESSION['UA_DETAILS']) || $_SESSION['UA_DETAILS']['level']!= 'admin')
     <div style="clear: both;height: 10px;"></div>
     <div id="sideTop">
         <div class="corner-left"></div>
-        <div id="sideTopCenter"><span><br />&rarr; Online Users &larr;</span></div>
+        <div id="sideTopCenter"><span><br />&rarr; Updates &larr;</span></div>
         <div class="corner-Tright"></div>
     </div>
+    
     <div class="sideCnt">
-       <div class="sideData">
-            <ul id="onlineUsersList">
-                
-            </ul>
-       </div>
+       <?php
+           echo getSoftInfo();
+        ?>
     </div>
     <div id="sideFooter">
         <div class="corner-bLeft"></div>
         <div id="sideBtmCenter"></div>
         <div class="corner-bRight"></div>
     </div>
-<?php } ?>      
+<?php } ?>     
 </div>   <!-- sidebar End -->
 
 	<div id="content">
@@ -126,6 +141,18 @@ if(empty($_SESSION['UA_DETAILS']) || $_SESSION['UA_DETAILS']['level']!= 'admin')
 
 	<!-- Footer Include -->
     <div id="footer"><?php include_once('footer.php'); ?></div> <!-- wrraper End -->
-
+<script type="text/javascript">
+	
+    $('.dispScrolled ul').cycle({
+        fx: 'scrollUp'
+    });
+    
+    $('#newsDisp div').cycle({
+        fx: 'fade'
+    });
+</script>
+<div id="newsDisp">
+    <?php echo getNews(); ?>
+</div>
 </body>
 </html>
